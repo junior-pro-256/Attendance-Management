@@ -1,4 +1,4 @@
-const API_BASE_URL='http://localhost:5000/api';
+const API_BASE_URL='https://attendance-management-v739.onrender.com/api';
 const $=id=>document.getElementById(id);
 const pages={login:$('login-page'),register:$('register-page'),forgot:$('forgot-page'),app:$('app-page')};
 let loginRole='student',registerRole='student',currentView='dashboard',lecturerCourses=[];
