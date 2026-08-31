@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Attendance Management System</title>
+        <link rel="stylesheet" href="style.css"></head>
+        <body>
+<section id="login-page" class="page auth-page">
+    <div class="card auth-card">
+        <div class="brand">
+            <h1>UGANDA INSTITUTE OF INFORMATION AND COMMUNICATION TECHNOLOGY</h1>
+            <p>Student and Lecturer Attendance Management</p>
+        </div>
+<div class="role-tabs">
+    <button class="tab active" data-role="student">Student Login</button>
+    <button class="tab" data-role="lecturer">Lecturer Login</button>
+    <button class="tab" data-role="admin">Admin Login</button></div>
+<p id="login-error" class="message error hidden"></p>
+<form id="login-form"><label id="login-identifier-label">Registration number</label>
+    <input id="login-identifier" required autocomplete="username" placeholder="2025/DSWE/DAY/1234/P">
+    <label>Password</label>
+    <input id="login-password" type="password" required autocomplete="current-password">
+    <button class="btn primary" id="login-btn">Log In</button>
+</form>
+<div class="auth-links">
+    <a href="#" id="forgot-link">Forgot password?</a>
+    <a href="#" id="register-link">Create account</a></div>
+</div>
+</section>
+
+<section id="register-page" class="page auth-page hidden">
+    <div class="card auth-card">
+        <div class="brand">
+            <h1>Attendance Management System</h1>
+            <p>Create a student or lecturer account</p>
+        </div>
+        <div class="role-tabs">
+            <button class="tab active" data-reg-role="student">Student</button>
+            <button class="tab" data-reg-role="lecturer">Lecturer</button>
+        </div><p id="register-message" class="message hidden"></p>
+        <form id="register-form">
+            <label>Full name</label><input id="register-name" required>
+            <label id="identity-label">Registration number</label>
+            <input id="register-identity" placeholder="2025/DSWE/DAY/1234/P" required>
+            <label>Email</label>
+            <input id="register-email" type="email" required>
+            <label>Password</label>
+            <input id="register-password" type="password" minlength="6" required>
+            <button class="btn primary">Register</button></form><p class="switch-link">Already have an account? <a href="#" id="back-login">Log in</a></p></div></section>
+
+<section id="forgot-page" class="page auth-page hidden">
+    <div class="card auth-card">
+        <div class="brand">
+            <h1>Password Reset</h1>
+            <p>Reset your Attendance Management System password</p>
+        </div>
+        <p id="forgot-message" class="message hidden"></p>
+        <form id="forgot-form">
+            <label>Email, Registration No. or Staff No.</label>
+            <input id="forgot-identifier" required>
+            <button class="btn primary">Generate Reset Token</button>
+        </form>
+        <div id="dev-token-box" class="dev-token hidden"></div>
+        <hr><form id="reset-form">
+            <label>Reset token</label>
+            <input id="reset-token" required>
+            <label>New password</label>
+            <input id="reset-password" type="password" minlength="6" required>
+            <button class="btn secondary">Reset Password</button>
+        </form>
+        <p class="switch-link"><a href="#" id="forgot-back">Back to login</a>
+        </p>
+    </div>
+</section>
+
+<section id="app-page" class="hidden">
+    <header class="topbar">
+        <div><strong>Attendance Management System</strong><span id="role-label"></span>
+        </div>
+        <span id="welcome-banner" class="welcome-banner hidden"></span>
+        <button id="logout-btn" class="btn outline">Logout</button>
+    </header>
+    <div class="layout">
+        <aside class="sidebar">
+            <button data-view="dashboard" class="nav active">Dashboard</button>
+<div id="student-nav">
+    <button data-view="student-programs" class="nav">Programs</button>
+    <button data-view="student-courses" class="nav">My Courses</button>
+    <button data-view="student-lectures" class="nav">
+        Attend Lecture
+    </button>
+    <button data-view="student-attendance" class="nav">
+        My Attendance
+    </button>
+    <button data-view="student-profile" class="nav">Profile</button>
+</div>
+<div id="lecturer-nav" class="hidden">
+    <button data-view="lecturer-courses" class="nav">
+        My Courses
+    </button>
+    <button data-view="take-attendance" class="nav">Take Attendance</button>
+    <button data-view="attendance-history" class="nav">Attendance History</button>
+    <button data-view="reports" class="nav">Reports</button>
+    <button data-view="lecturer-profile" class="nav">Profile</button>
+</div>
+<div id="admin-nav" class="hidden">
+    <button data-view="admin-programs" class="nav">Programs</button>
+    <button data-view="admin-users" class="nav">Users</button>
+    <button data-view="admin-student-attendance" class="nav">Student Attendance</button>
+    <button data-view="admin-lecturer-attendance" class="nav">Lecturer Attendance</button>
+</div>
+</aside>
+<main class="content">
+    <p id="app-message" class="message hidden"></p>
+<section id="view-dashboard" class="view">
+    <div class="page-title">
+        <h1>Dashboard</h1>
+        <p id="dashboard-subtitle"></p>
+    </div>
+    <div id="dashboard-cards" class="stats-grid"></div>
+    <div id="dashboard-extra" class="card"></div>
+</section>
+<section id="view-student-programs" class="view hidden">
+    <div class="page-title">
+        <h1>Programs</h1>
+        <p>Enroll in a program to automatically enroll in every course unit under it.</p>
+    </div>
+    <h3>Available Programs</h3>
+    <div id="available-programs-list" class="grid"></div>
+    <h3>My Programs</h3>
+    <div id="my-programs-list" class="grid"></div>
+</section>
+<section id="view-student-courses" class="view hidden">
+    <div class="page-title">
+        <h1>My Courses</h1>
+        <p>These course units come from the programs you are enrolled in.</p>
+    </div>
+    <div id="student-courses-list" class="grid"></div>
+</section>
+<section id="view-student-lectures" class="view hidden">
+    <div class="page-title">
+        <h1>Attend Lecture</h1>
+        <p>You can attend only one overlapping lecture time.</p>
+    </div><div id="student-lectures-list" class="grid"></div>
+</section>
+<section id="view-student-attendance" class="view hidden">
+    <div class="page-title">
+        <h1>My Attendance</h1>
+    </div>
+    <div id="student-statistics" class="stats-grid"></div>
+    <div class="card table-card">
+        <div class="table-scroll">
+            <table><thead><tr><th>Date</th><th>Course</th><th>Time</th><th>Status</th></tr></thead>
+                <tbody id="student-attendance-body"></tbody></table></div></div></section>
+<section id="view-student-profile" class="view hidden">
+    <div class="page-title">
+        <h1>Profile</h1>
+    </div>
+    <div id="student-profile-card" class="card"></div>
+</section>
+
+<section id="view-lecturer-courses" class="view hidden">
+    <div class="page-title">
+        <h1>My Courses</h1>
+        <p>Choose the course units you teach, then post a lesson (weekly day and time) so enrolled students can attend. Attendance is taken automatically when they join.</p>
+    </div>
+    <div class="card">
+        <button id="refresh-available-courses" class="btn primary">Show Available Course Units</button>
+        <div id="lecturer-available-courses" class="grid" style="margin-top:15px"></div>
+    </div>
+    <div id="lecturer-courses-list" class="grid"></div>
+</section>
+<section id="view-take-attendance" class="view hidden">
+    <div class="page-title">
+        <h1>Monitor Attendance</h1>
+        <p>Attendance is registered automatically when students join during the scheduled lecture.</p>
+    </div>
+    <div class="card controls">
+        <select id="attendance-course"></select>
+        <button id="load-attendance" class="btn primary">Monitor Current Lecture</button>
+        <button id="refresh-live-attendance" class="btn outline">Refresh</button>
+    </div><div id="take-attendance-area"></div>
+</section>
+<section id="view-attendance-history" class="view hidden">
+    <div class="page-title">
+        <h1>Attendance History</h1>
+    </div>
+    <div class="card filters">
+        <select id="history-course"></select>
+        <input id="history-date" type="date">
+        <select id="history-status">
+            <option value="">All statuses</option>
+            <option>Present</option>
+            <option>Absent</option>
+            <option>Late</option>
+        </select>
+        <button id="filter-history" class="btn primary">Filter</button>
+    </div><div class="card table-card">
+        <div class="table-scroll">
+            <table><thead><tr><th>Date</th><th>Student</th><th>Course</th><th>Status</th></tr></thead><tbody id="history-body"></tbody>
+            </table>
+        </div>
+    </div>
+</section>
+<section id="view-reports" class="view hidden">
+    <div class="page-title">
+        <h1>Reports & Statistics</h1>
+    </div>
+    <div id="reports-list" class="grid"></div>
+</section>
+<section id="view-lecturer-profile" class="view hidden">
+    <div class="page-title">
+        <h1>Profile</h1>
+    </div>
+    <div id="lecturer-profile-card" class="card">
+
+    </div>
+</section>
+
+<section id="view-admin-programs" class="view hidden">
+    <div class="page-title">
+        <h1>Programs & Course Units</h1>
+        <p>Add or delete programs (e.g. Software Engineering). Each program holds its own course units, which lecturers can then choose to teach and post lessons for.</p>
+    </div>
+    <div class="card">
+        <form id="admin-program-form" class="inline-form">
+            <input id="admin-program-code" placeholder="Program code (e.g. SWE)" required>
+            <input id="admin-program-name" placeholder="Program name (e.g. Software Engineering)" required>
+            <button class="btn primary">Add Program</button>
+        </form>
+    </div>
+    <div id="admin-programs-list" class="grid">
+
+    </div>
+</section>
+<section id="view-admin-users" class="view hidden">
+    <div class="page-title">
+        <h1>Users</h1>
+        <p>View students, lecturers and administrators.</p>
+    </div>
+    <div class="card filters">
+        <select id="admin-user-role">
+            <option value="">All roles</option>
+            <option value="student">Students</option>
+            <option value="lecturer">Lecturers</option>
+            <option value="admin">Administrators</option>
+        </select>
+        <button id="load-admin-users" class="btn primary">Load Users</button>
+    </div><div id="admin-users-list" class="grid"></div>
+</section>
+<section id="view-admin-student-attendance" class="view hidden">
+    <div class="page-title">
+        <h1>Student Attendance Management</h1>
+        <p>Administrators can review and correct student attendance records.</p>
+    </div>
+    <div class="card filters">
+        <input id="admin-student-date" type="date">
+        <select id="admin-student-status">
+            <option value="">All statuses</option>
+            <option>Present</option>
+            <option>Absent</option>
+            <option>Late</option>
+        </select>
+        <button id="load-admin-student-attendance" class="btn primary">Load Records</button>
+        <button id="print-admin-student-attendance" class="btn outline no-print">Print Attendance List</button>
+    </div>
+    <div class="card table-card" id="admin-student-attendance-printarea">
+        <h3 class="print-only">Student Attendance List</h3>
+        <div class="table-scroll">
+            <table><thead><tr><th>Date</th><th>Student</th><th>Course</th><th>Status</th><th class="no-print">Action</th></tr></thead><tbody id="admin-student-attendance-body">
+
+            </tbody>
+        </table>
+    </div>
+</div>
+</section>
+<section id="view-admin-lecturer-attendance" class="view hidden">
+    <div class="page-title">
+        <h1>Lecturer Attendance Management</h1>
+        <p>Administrators can record and update lecturer attendance.</p>
+    </div>
+    <div class="card">
+        <div class="controls">
+            <select id="admin-lecturer-select"></select>
+            <input id="admin-lecturer-date" type="date">
+            <select id="admin-lecturer-status">
+                <option>Present</option>
+                <option>Absent</option>
+                <option>Late</option>
+            </select>
+            <button id="save-admin-lecturer-attendance" class="btn primary">Save Attendance</button>
+        </div>
+    </div>
+    <div class="card filters">
+        <input id="filter-lecturer-date" type="date">
+        <button id="load-admin-lecturer-attendance" class="btn primary">Load Records</button>
+        <button id="print-admin-lecturer-attendance" class="btn outline no-print">Print Attendance List</button>
+    </div><div class="card table-card" id="admin-lecturer-attendance-printarea">
+        <h3 class="print-only">Lecturer Attendance List</h3>
+        <div class="table-scroll">
+            <table>
+                <thead><tr><th>Date</th><th>Lecturer</th>
+                    <th>Staff No.</th>
+                    <th>Status</th>
+                </tr></thead>
+                <tbody id="admin-lecturer-attendance-body">
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+</main></div></section><script src="app.js"></script></body></html>
