@@ -195,7 +195,7 @@ display:flex;
 min-height:calc(100vh - 64px)
 }
 .sidebar{
-width:230px;
+width:200px;
 background:#fff;
 border-right:1px solid #e5e7eb;
 padding:20px 12px
