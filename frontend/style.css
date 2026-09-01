@@ -44,7 +44,7 @@ font-size:15px
 display:grid;
 grid-template-columns:1fr 1fr;
 gap:6px;
-background:#cdcecf;
+background: brown;
 padding:5px;
 border-radius:10px;
 margin-bottom:18px
