@@ -71,7 +71,8 @@ font-weight:700;
 margin-top:7px
 }
 input,select{
-width:100%;min-width:0;max-width:100%;padding:11px 12px;
+width:100%;min-width:0;
+    max-width:100%;padding:11px 12px;
 border:1px solid #97999c;
 border-radius:8px;
 font-size:15px;
@@ -164,7 +165,7 @@ word-break:break-all
 }
 .topbar{
 height:64px;
-background:#b3aeae;
+background: rgb(55, 55,57);
 display:flex;
 align-items:center;
 justify-content:space-between;
