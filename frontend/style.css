@@ -20,7 +20,7 @@ overflow-x:hidden
     background: rgb(2, 2, 36);
 }
 .card{
-    background:#9b9797;
+    background: white;
     border-radius:14px;
     box-shadow:0 5px 24px rgba(15,23,42,.08);
     padding:22px
