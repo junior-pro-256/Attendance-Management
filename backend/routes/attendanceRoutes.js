@@ -10,6 +10,7 @@ router.get('/my-lectures', auth, requireRole('student'), a.availableLectures);
 router.get('/my-statistics', auth, requireRole('student'), a.studentStatistics);
 
 router.get('/lecturer/live', auth, requireRole('lecturer'), a.lecturerLiveAttendance);
+router.get('/lecturer/lectures/:lectureId/pin', auth, requireRole('lecturer'), a.lecturerLecturePin);
 router.get('/lecturer/history', auth, requireRole('lecturer'), a.lecturerAttendance);
 router.get('/lecturer/courses/:courseId/students', auth, requireRole('lecturer'), a.lectureStudents);
 router.get('/lecturer/reports', auth, requireRole('lecturer'), a.lecturerReports);
