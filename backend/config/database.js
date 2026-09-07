@@ -18,40 +18,46 @@ require('dotenv').config();
 // if you try to force it. DB_SSL in .env toggles this per-environment.
 const useSSL = process.env.DB_SSL === 'true';
 
-// Create a new Sequelize instance using the credentials from .env
-const sequelize = new Sequelize(
-  process.env.DB_NAME,
-  process.env.DB_USER,
-  process.env.DB_PASSWORD,
-  {
-    host: process.env.DATABASE_URL || process.env.DB_HOST || 'localhost',
-    port: process.env.DB_PORT || 3306,
-    dialect: 'mysql',
-    logging: false, // set to console.log if you want to see raw SQL queries
-    dialectOptions: useSSL
-      ? {
-          ssl: {
-            // "require: true" enables SSL; most managed MySQL hosts use
-            // certificates that Node won't validate against a local CA
-            // bundle, so we relax certificate verification here. This
-            // is the standard approach for connecting to hosts like
-            // Railway/Aiven/PlanetScale from a typical app server.
-            require: true,
-            rejectUnauthorized: false,
-          },
-        }
-      : {},
-    define: {
-      // Automatically add createdAt / updatedAt timestamps to every model
-      timestamps: true,
-    },
-  }
-);
+const databaseUrl = process.env.DATABASE_URL || process.env.MYSQL_URL;
+const connectionOptions = {
+  dialect: 'mysql',
+  logging: false,
+  dialectOptions: useSSL
+    ? {
+        ssl: {
+          require: true,
+          rejectUnauthorized: false,
+        },
+      }
+    : {},
+  define: { timestamps: true },
+};
+
+// Hosted databases commonly provide a complete mysql:// connection URL. The
+// previous setup used that URL as a hostname, which made hosted deployments
+// fail to connect. Local development can continue to use the individual DB_*
+// variables from .env.example.
+const sequelize = databaseUrl
+  ? new Sequelize(databaseUrl, connectionOptions)
+  : new Sequelize(
+      process.env.DB_NAME,
+      process.env.DB_USER,
+      process.env.DB_PASSWORD,
+      {
+        ...connectionOptions,
+        host: process.env.DB_HOST || 'localhost',
+        port: process.env.DB_PORT || 3306,
+      }
+    );
 
 // Simple helper to test the connection when the server starts.
 // This does NOT create tables — that happens via sequelize.sync()
 // in server.js. This just confirms credentials/host are correct.
 async function testConnection() {
+  if (!databaseUrl && (!process.env.DB_NAME || !process.env.DB_USER)) {
+    console.error('❌ Database configuration is missing. Create backend/.env from backend/.env.example, or set DATABASE_URL/MYSQL_URL in your hosting service.');
+    process.exit(1);
+  }
   try {
     await sequelize.authenticate();
     console.log('MySQL connection has been established successfully.');
