@@ -1,4 +1,5 @@
 const { Op } = require('sequelize');
+const crypto = require('crypto');
 const Attendance = require('../models/Attendance');
 const User = require('../models/User');
 const Course = require('../models/Course');
@@ -10,6 +11,7 @@ function pct(attended, total) {
 }
 
 const APP_TIMEZONE = process.env.APP_TIMEZONE || 'Africa/Kampala';
+const PIN_LIFETIME_MS = 15 * 1000;
 function currentDate(now) {
   return new Intl.DateTimeFormat('en-CA', { timeZone: APP_TIMEZONE, year: 'numeric', month: '2-digit', day: '2-digit' }).format(now);
 }
@@ -18,6 +20,25 @@ function currentTimeHM(now) {
 }
 function currentDayOfWeek(now) {
   return new Intl.DateTimeFormat('en-US', { timeZone: APP_TIMEZONE, weekday: 'long' }).format(now);
+}
+
+function isLectureInProgress(lecture, now = new Date()) {
+  const currentTime = currentTimeHM(now);
+  return lecture.dayOfWeek === currentDayOfWeek(now)
+    && currentTime >= String(lecture.startTime).slice(0, 5)
+    && currentTime < String(lecture.endTime).slice(0, 5);
+}
+
+// PINs are only created by this server. A lecturer viewing a live lecture receives
+// the same PIN students must enter; a new cryptographically-random PIN is issued
+// whenever the old one has reached its 15-second expiry.
+async function currentLecturePin(lecture, now = new Date()) {
+  if (!lecture.attendancePin || !lecture.attendancePinExpiresAt || new Date(lecture.attendancePinExpiresAt) <= now) {
+    lecture.attendancePin = crypto.randomInt(0, 10000).toString().padStart(4, '0');
+    lecture.attendancePinExpiresAt = new Date(now.getTime() + PIN_LIFETIME_MS);
+    await lecture.save();
+  }
+  return { pin: lecture.attendancePin, expiresAt: lecture.attendancePinExpiresAt };
 }
 
 async function markStudentAttendance(req, res) {
@@ -38,10 +59,18 @@ async function markStudentAttendance(req, res) {
     // attendance while today matches that day and the scheduled lecture is in progress.
     const now = new Date();
     const today = currentDate(now);
-    const todayName = currentDayOfWeek(now);
-    const currentTime = currentTimeHM(now);
-    if (lecture.dayOfWeek !== todayName || currentTime < String(lecture.startTime).slice(0,5) || currentTime >= String(lecture.endTime).slice(0,5)) {
+    if (!isLectureInProgress(lecture, now)) {
       return res.status(400).json({ success: false, message: `Attendance can only be registered on ${lecture.dayOfWeek}, during the scheduled lecture time (${lecture.startTime} - ${lecture.endTime}).` });
+    }
+
+    const pin = String(req.body?.pin || '').trim();
+    if (!/^\d{4}$/.test(pin)) {
+      return res.status(400).json({ success: false, message: 'Enter the current 4-digit PIN from your lecturer.' });
+    }
+    // Do not rotate here: once a PIN expires, only the lecturer can obtain and
+    // display its replacement through the live-PIN endpoint.
+    if (!lecture.attendancePin || !lecture.attendancePinExpiresAt || new Date(lecture.attendancePinExpiresAt) <= now || pin !== lecture.attendancePin) {
+      return res.status(400).json({ success: false, message: 'That PIN is invalid or has expired. Ask your lecturer for the current PIN.' });
     }
 
     const existing = await Attendance.findOne({ where: { studentId: req.user.id, lectureId, date: today } });
@@ -72,6 +101,23 @@ async function markStudentAttendance(req, res) {
     if (e.name === 'SequelizeUniqueConstraintError') return res.status(400).json({ success: false, message: 'Attendance already exists for this lecture.' });
     console.error(e);
     res.status(500).json({ success: false, message: 'Could not mark attendance.' });
+  }
+}
+
+async function lecturerLecturePin(req, res) {
+  try {
+    const lecture = await Lecture.findByPk(req.params.lectureId, { include: [{ model: Course, as: 'course', attributes: ['id', 'code', 'name', 'lecturerId'] }] });
+    if (!lecture || lecture.course?.lecturerId !== req.user.id) {
+      return res.status(403).json({ success: false, message: 'You are not authorized to generate a PIN for this lecture.' });
+    }
+    if (!isLectureInProgress(lecture)) {
+      return res.status(400).json({ success: false, message: 'PINs are available only while this lecture is in progress.' });
+    }
+    const data = await currentLecturePin(lecture);
+    res.json({ success: true, data: { lectureId: lecture.id, ...data } });
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ success: false, message: 'Could not generate the attendance PIN.' });
   }
 }
 
@@ -109,13 +155,13 @@ async function lecturerLiveAttendance(req, res) {
   if (req.query.courseId) courseWhere.id = req.query.courseId;
   const courses = await Course.findAll({ where: courseWhere, attributes:['id','code','name'] });
   const courseIds = courses.map(c => c.id);
-  if (!courseIds.length) return res.json({ success:true, data:[], active:false, message:'You have no selected course units.' });
+  if (!courseIds.length) return res.json({ success:true, data:[], lectures:[], active:false, message:'You have no selected course units.' });
 
   const lectures = await Lecture.findAll({
     where: { courseId: courseIds, dayOfWeek: todayName, startTime: { [Op.lte]: currentTime }, endTime: { [Op.gt]: currentTime } },
     include: [{ model: Course, as:'course', attributes:['id','code','name'] }]
   });
-  if (!lectures.length) return res.json({ success:true, data:[], active:false, message:'No lecture for this course is currently in progress.' });
+  if (!lectures.length) return res.json({ success:true, data:[], lectures:[], active:false, message:'No lecture for this course is currently in progress.' });
 
   const lectureIds = lectures.map(l => l.id);
   const rows = await Attendance.findAll({
@@ -127,7 +173,7 @@ async function lecturerLiveAttendance(req, res) {
     ],
     order: [['checkInTime','ASC']]
   });
-  res.json({ success:true, active:true, data:rows });
+  res.json({ success:true, active:true, lectures:lectures.map(lecture => lecture.toJSON()), data:rows });
 }
 
 async function lecturerAttendance(req, res) {
@@ -200,4 +246,4 @@ async function lecturerDashboard(req, res) {
   res.json({ success: true, data: { lecturer: req.user, assignedCourses: courses.length, students, todayAttendance: todayRows, overallAttendancePercentage: pct(attended, allRows.length) } });
 }
 
-module.exports = { markStudentAttendance, studentRecords, availableLectures, lecturerLiveAttendance, lecturerAttendance, lectureStudents, lecturerReports, studentStatistics, lecturerDashboard };
+module.exports = { markStudentAttendance, studentRecords, availableLectures, lecturerLecturePin, lecturerLiveAttendance, lecturerAttendance, lectureStudents, lecturerReports, studentStatistics, lecturerDashboard };
