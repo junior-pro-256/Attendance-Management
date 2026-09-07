@@ -1,239 +1,314 @@
-*{box-sizing:border-box;margin:0;padding:0
-}
-html{overflow-x:hidden}
-body{
-    font-family:Segoe UI,Roboto,Arial,sans-serif;
-background:#061b36;
-color:#6591cf;
-min-height:100vh;
-overflow-x:hidden
-}
-.hidden{
-    display:none!important}
-.page{
-    min-height:100vh}
-.auth-page{
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    padding:20px;
-    background: rgb(2, 2, 36);
-}
-.card{
-    background: white;
-    border-radius:14px;
-    box-shadow:0 5px 24px rgba(15,23,42,.08);
-    padding:22px
-}
-.auth-card{
-    width:100%;max-width:460px;padding:34px
-}
-.brand{
-    text-align:center;
-    margin-bottom:22px
-}
-.brand h1{
-color:#0b42b1;
-font-size:20px
-}
-.brand p{
-color:#64748b;margin-top:4px;
-font-size:15px
-}
-.role-tabs{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:6px;
-background: brown;
-padding:5px;
-border-radius:10px;
-margin-bottom:18px
-}
-.tab{
-border:0;
-background:transparent;
-padding:10px;
-border-radius:7px;
-font-weight:700;
-color:#7f9fcd;
-cursor:pointer
-}
-.tab.active{
-background:#ece9e9;
-color:#2563eb;box-shadow:0 1px 4px rgba(0,0,0,.08)
-}
-form{
-display:flex;
-flex-direction:column;
-gap:7px}label
-{font-size:13px;
-font-weight:700;
-margin-top:7px
-}
-input,select{
-width:100%;min-width:0;
-    max-width:100%;padding:11px 12px;
-border:1px solid #97999c;
-border-radius:8px;
-font-size:15px;
-background:#e4dddd;
-outline:0
-}
-input[type="time"]{
--webkit-min-logical-width:0;
-}
-input:focus,select:focus{
-border-color:#2563eb;
-box-shadow:0 0 0 3px rgba(37,99,235,.1)
-}
-.btn{
-border:0;border-radius:8px;
-padding:11px 15px;
-font-weight:700;
-cursor:pointer
-}
-.btn.primary
-{
-background:#2563eb;
-color:#fff
-}
-.btn.secondary{
-background:#0f766e;color:#fff
-}
-.btn.outline{
-background:#d2cbcb;color:#2563eb;
-border:1px solid #2563eb
-}
-.btn.danger{
-background:#dc2626;color:#fff
-}
-.btn:disabled{
-opacity:.6;
-cursor:not-allowed
-}
-.inline-check{
-display:inline-flex;
-align-items:center;
-gap:6px;
-font-weight:600;
-color:#314157
-}
-.auth-card .btn{
-margin-top:12px
-}
-.auth-links,.switch-link{
-display:flex;
-justify-content:space-between;
-margin-top:17px;
-font-size:14px}
-.switch-link{
-justify-content:center
-}
-.auth-links a,.switch-link a{
-color:#2563eb;
-text-decoration:none;
-font-weight:700}
-.message
-{
-padding:10px 12px;
-border-radius:8px;
-margin-bottom:15px;
-font-size:14px
-}
-.message.error{
-background:#fef2f2;
-color:#b91c1c;
-border:1px solid #fecaca
-}
-.message.success{
-background:#f0fdf4;
-color:#15803d;
-border:1px solid #bbf7d0
-}
-.message.info{
-background:#eff6ff;
-color:#1d4ed8;
-border:1px solid #bfdbfe
-}
-.dev-token{
-background:#fff7ed;
-color:#9a3412;
-padding:12px;
-border-radius:8px;
-margin:12px 0;
-word-break:break-all
-}
-.topbar{
-height:64px;
-background: rgb(55, 55,57);
-display:flex;
-align-items:center;
-justify-content:space-between;
-padding:0 25px;
-box-shadow:0 2px 10px rgba(0,0,0,.06);
-position:sticky;
-top:0;
-z-index:10
-}
-.topbar strong{
-color:#2563eb;
-font-size:21px
-}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Attendance Management System</title>
+        <link rel="stylesheet" href="style.css"></head>
+        <body>
+<section id="login-page" class="page auth-page">
+    <div class="card auth-card">
+        <div class="brand">
+            <h3>UGANDA INSTITUTE OF INFORMATION AND COMMUNICATION TECHNOLOGY</h3>
+            <p>Student and Lecturer Attendance Management system</p>
+        </div>
+<div class="role-tabs">
+    <button class="tab active" data-role="student">Student Login</button>
+    <button class="tab" data-role="lecturer">Lecturer Login</button>
+    <button class="tab" data-role="admin">Admin Login</button></div>
+<p id="login-error" class="message error hidden"></p>
+<form id="login-form"><label id="login-identifier-label">Registration number</label>
+    <input id="login-identifier" required  placeholder="2025/DSWE/DAY/1234/G">
+    <label>Password</label>
+    <input id="login-password" type="password" required autocomplete="current-password">
+    <button class="btn primary" id="login-btn">Log In</button>
+</form>
+<div class="auth-links">
+    <a href="#" id="forgot-link">Forgot password?</a>
+    <a href="#" id="register-link">Create account</a></div>
+</div>
+</section>
 
-.topbar span{
-margin-left:12px;
-font-size:12px;
-color:#648bc1;
-text-transform:uppercase
-}
-.welcome-banner{
-font-size:14px;
-font-weight:700;
-color:#1e3a8a
-}
-.layout{
-display:flex;
-min-height:calc(100vh - 64px)
-}
-.sidebar{
-width:200px;
-background:#fff;
-border-right:1px solid #e5e7eb;
-padding:20px 12px
-}
-.nav{
-display:block;
-width:100%;
-text-align:left;
-background:transparent;
-border:0;
-border-radius:8px;
-padding:11px 13px;
-margin-bottom:5px;
-color:#475569;
-font-weight:600;
-cursor:pointer
-}
-.nav.active,.nav:hover{
-background:#eff6ff;
-color:#2563eb
-}
-.content{
-flex:1;
-max-width:1250px;
-width:100%;margin:0 auto;padding:28px}
-.view{
-    width:100%
-}
-.page-title{margin-bottom:20px}.page-title h1{font-size:26px}.page-title p{color:#64748b;margin-top:4px}.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:20px;min-width:0}.stats-grid>*{min-width:0}.stat{background:#fff;border-radius:13px;padding:20px;box-shadow:0 4px 18px rgba(15,23,42,.06)}.stat small{color:#64748b}.stat strong{display:block;font-size:28px;margin-top:8px;color:#1e3a8a}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin-top:18px;min-width:0}.grid>*{min-width:0}.course-card{background:#fff;padding:20px;border-radius:13px;box-shadow:0 4px 18px rgba(15,23,42,.06)}.course-card h3{margin-bottom:6px}.muted{color:#64748b;font-size:14px}.course-card .actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:15px}.inline-form{display:grid;grid-template-columns:180px 1fr auto;align-items:end;gap:10px;min-width:0}.controls,.filters{display:grid;grid-template-columns:1fr 1fr auto;gap:10px;min-width:0}.controls>*,.filters>*,.inline-form>*{min-width:0}.table-card{margin-top:18px}.table-scroll{overflow:auto}table{width:100%;border-collapse:collapse;min-width:600px}th,td{text-align:left;padding:12px;border-bottom:1px solid #e5e7eb;font-size:14px}th{font-size:12px;color:#64748b;text-transform:uppercase}.status{font-weight:700}.status.Present{color:#15803d}.status.Absent{color:#b91c1c}.status.Late{color:#b45309}.dev-token+hr{border:0;border-top:1px solid #e5e7eb;margin:18px 0}.student-row{display:grid;grid-template-columns:1fr 130px;gap:10px;align-items:center;padding:12px;border-bottom:1px solid #e5e7eb}.student-row select{padding:8px}.empty{color:#64748b;padding:20px;text-align:center}.mini-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}@media(max-width:850px){.layout{display:block}.sidebar{width:100%;display:flex;gap:5px;overflow:auto;padding:10px}.nav{min-width:max-content;width:auto;margin:0}.content{padding:20px 14px}.stats-grid{grid-template-columns:repeat(2,1fr)}.inline-form,.controls,.filters{grid-template-columns:1fr}.topbar{padding:0 15px}.page-title h1{font-size:22px}}
-@media(max-width:600px){.content{padding:14px 10px}.card{padding:16px}.course-card{padding:16px}.stats-grid{gap:10px}.stat{padding:14px}.stat strong{font-size:22px}.topbar{height:56px;padding:0 12px}.topbar strong{font-size:17px}.page-title h1{font-size:20px}.btn{padding:10px 12px;font-size:14px}}
-@media(max-width:480px){.stats-grid{grid-template-columns:1fr}.auth-card{padding:25px 20px}.topbar strong{font-size:18px}.topbar span{display:none}.student-row{grid-template-columns:1fr}.content{padding:16px 10px}}
-@media(max-width:380px){.sidebar{padding:8px}.nav{padding:9px 10px;font-size:14px}.course-card h3{font-size:15px}.auth-card{padding:20px 16px}.content{padding:12px 8px}.card{padding:14px}}
-.print-only{display:none}
-@media print{
-  body.printing .topbar,body.printing .sidebar,body.printing .no-print,body.printing .page-title,body.printing #app-message{display:none!important}
-  body.printing .content{padding:0;max-width:none}
-  body.printing .print-only{display:block;margin-bottom:14px}
-  body.printing .view .card{display:none}
-  body.printing .view .card.print-target{display:block!important;box-shadow:none;padding:0}
-}
+<section id="register-page" class="page auth-page hidden">
+    <div class="card auth-card">
+        <div class="brand">
+            <h1>Attendance Management System</h1>
+            <p>Create a student or lecturer account</p>
+        </div>
+        <div class="role-tabs">
+            <button class="tab active" data-reg-role="student">Student</button>
+            <button class="tab" data-reg-role="lecturer">Lecturer</button>
+        </div><p id="register-message" class="message hidden"></p>
+        <form id="register-form">
+            <label>Full name</label><input id="register-name" required>
+            <label id="identity-label">Registration number</label>
+            <input id="register-identity" placeholder="2025/DSWE/DAY/1234/P" required>
+            <label>Email</label>
+            <input id="register-email" type="email" required>
+            <label>Password</label>
+            <input id="register-password" type="password" minlength="6" required>
+            <button class="btn primary">Register</button></form><p class="switch-link">Already have an account? <a href="#" id="back-login">Log in</a></p></div></section>
+
+<section id="forgot-page" class="page auth-page hidden">
+    <div class="card auth-card">
+        <div class="brand">
+            <h1>Password Reset</h1>
+            <p>Reset your Attendance Management System password</p>
+        </div>
+        <p id="forgot-message" class="message hidden"></p>
+        <form id="forgot-form">
+            <label>Email, Registration No. or Staff No.</label>
+            <input id="forgot-identifier" required>
+            <button class="btn primary">Generate Reset Token</button>
+        </form>
+        <div id="dev-token-box" class="dev-token hidden"></div>
+        <hr><form id="reset-form">
+            <label>Reset token</label>
+            <input id="reset-token" required>
+            <label>New password</label>
+            <input id="reset-password" type="password" minlength="6" required>
+            <button class="btn secondary">Reset Password</button>
+        </form>
+        <p class="switch-link"><a href="#" id="forgot-back">Back to login</a>
+        </p>
+    </div>
+</section>
+
+<section id="app-page" class="hidden">
+    <header class="topbar">
+        <div><strong>Attendance Management System</strong><span id="role-label"></span>
+        </div>
+        <span id="welcome-banner" class="welcome-banner hidden"></span>
+        <button id="logout-btn" class="btn outline">Logout</button>
+    </header>
+    <div class="layout">
+        <aside class="sidebar">
+            <button data-view="dashboard" class="nav active">Dashboard</button>
+<div id="student-nav">
+    <button data-view="student-programs" class="nav">Programs</button>
+    <button data-view="student-courses" class="nav">My Courses</button>
+    <button data-view="student-lectures" class="nav">
+        Attend Lecture
+    </button>
+    <button data-view="student-attendance" class="nav">
+        My Attendance
+    </button>
+    <button data-view="student-profile" class="nav">Profile</button>
+</div>
+<div id="lecturer-nav" class="hidden">
+    <button data-view="lecturer-courses" class="nav">
+        My Courses
+    </button>
+    <button data-view="take-attendance" class="nav">Take Attendance</button>
+    <button data-view="attendance-history" class="nav">Attendance History</button>
+    <button data-view="reports" class="nav">Reports</button>
+    <button data-view="lecturer-profile" class="nav">Profile</button>
+</div>
+<div id="admin-nav" class="hidden">
+    <button data-view="admin-programs" class="nav">Programs</button>
+    <button data-view="admin-users" class="nav">Users</button>
+    <button data-view="admin-student-attendance" class="nav">Student Attendance</button>
+    <button data-view="admin-lecturer-attendance" class="nav">Lecturer Attendance</button>
+</div>
+</aside>
+<main class="content">
+    <p id="app-message" class="message hidden"></p>
+<section id="view-dashboard" class="view">
+    <div class="page-title">
+        <h1>Dashboard</h1>
+        <p id="dashboard-subtitle"></p>
+    </div>
+    <div id="dashboard-cards" class="stats-grid"></div>
+    <div id="dashboard-extra" class="card"></div>
+</section>
+<section id="view-student-programs" class="view hidden">
+    <div class="page-title">
+        <h1>Programs</h1>
+        <p>Enroll in a program to automatically enroll in every course unit under it.</p>
+    </div>
+    <h3>Available Programs</h3>
+    <div id="available-programs-list" class="grid"></div>
+    <h3>My Programs</h3>
+    <div id="my-programs-list" class="grid"></div>
+</section>
+<section id="view-student-courses" class="view hidden">
+    <div class="page-title">
+        <h1>My Courses</h1>
+        <p>These course units come from the programs you are enrolled in.</p>
+    </div>
+    <div id="student-courses-list" class="grid"></div>
+</section>
+<section id="view-student-lectures" class="view hidden">
+    <div class="page-title">
+        <h1>Attend Lecture</h1>
+        <p>You can attend only one overlapping lecture time.</p>
+    </div><div id="student-lectures-list" class="grid"></div>
+</section>
+<section id="view-student-attendance" class="view hidden">
+    <div class="page-title">
+        <h1>My Attendance</h1>
+    </div>
+    <div id="student-statistics" class="stats-grid"></div>
+    <div class="card table-card">
+        <div class="table-scroll">
+            <table><thead><tr><th>Date</th><th>Course</th><th>Time</th><th>Status</th></tr></thead>
+                <tbody id="student-attendance-body"></tbody></table></div></div></section>
+<section id="view-student-profile" class="view hidden">
+    <div class="page-title">
+        <h1>Profile</h1>
+    </div>
+    <div id="student-profile-card" class="card"></div>
+</section>
+
+<section id="view-lecturer-courses" class="view hidden">
+    <div class="page-title">
+        <h1>My Courses</h1>
+        <p>Choose the course units you teach, then post a lesson (weekly day and time) so enrolled students can attend. Attendance is taken automatically when they join.</p>
+    </div>
+    <div class="card">
+        <button id="refresh-available-courses" class="btn primary">Show Available Course Units</button>
+        <div id="lecturer-available-courses" class="grid" style="margin-top:15px"></div>
+    </div>
+    <div id="lecturer-courses-list" class="grid"></div>
+</section>
+<section id="view-take-attendance" class="view hidden">
+    <div class="page-title">
+        <h1>Live PIN & Attendance</h1>
+        <p>Select a course during its scheduled lecture to generate and display the rotating student attendance PIN.</p>
+    </div>
+    <div class="card controls">
+        <select id="attendance-course"></select>
+        <button id="load-attendance" class="btn primary">Monitor Current Lecture</button>
+        <button id="refresh-live-attendance" class="btn outline">Refresh</button>
+    </div><div id="take-attendance-area"></div>
+</section>
+<section id="view-attendance-history" class="view hidden">
+    <div class="page-title">
+        <h1>Attendance History</h1>
+    </div>
+    <div class="card filters">
+        <select id="history-course"></select>
+        <input id="history-date" type="date">
+        <select id="history-status">
+            <option value="">All statuses</option>
+            <option>Present</option>
+            <option>Absent</option>
+            <option>Late</option>
+        </select>
+        <button id="filter-history" class="btn primary">Filter</button>
+    </div><div class="card table-card">
+        <div class="table-scroll">
+            <table><thead><tr><th>Date</th><th>Student</th><th>Course</th><th>Status</th></tr></thead><tbody id="history-body"></tbody>
+            </table>
+        </div>
+    </div>
+</section>
+<section id="view-reports" class="view hidden">
+    <div class="page-title">
+        <h1>Reports & Statistics</h1>
+    </div>
+    <div id="reports-list" class="grid"></div>
+</section>
+<section id="view-lecturer-profile" class="view hidden">
+    <div class="page-title">
+        <h1>Profile</h1>
+    </div>
+    <div id="lecturer-profile-card" class="card">
+
+    </div>
+</section>
+
+<section id="view-admin-programs" class="view hidden">
+    <div class="page-title">
+        <h1>Programs & Course Units</h1>
+        <p>Add or delete programs (e.g. Software Engineering). Each program holds its own course units, which lecturers can then choose to teach and post lessons for.</p>
+    </div>
+    <div class="card">
+        <form id="admin-program-form" class="inline-form">
+            <input id="admin-program-code" placeholder="Program code (e.g. SWE)" required>
+            <input id="admin-program-name" placeholder="Program name (e.g. Software Engineering)" required>
+            <button class="btn primary">Add Program</button>
+        </form>
+    </div>
+    <div id="admin-programs-list" class="grid">
+
+    </div>
+</section>
+<section id="view-admin-users" class="view hidden">
+    <div class="page-title">
+        <h1>Users</h1>
+        <p>View students, lecturers and administrators.</p>
+    </div>
+    <div class="card filters">
+        <select id="admin-user-role">
+            <option value="">All roles</option>
+            <option value="student">Students</option>
+            <option value="lecturer">Lecturers</option>
+            <option value="admin">Administrators</option>
+        </select>
+        <button id="load-admin-users" class="btn primary">Load Users</button>
+    </div><div id="admin-users-list" class="grid"></div>
+</section>
+<section id="view-admin-student-attendance" class="view hidden">
+    <div class="page-title">
+        <h1>Student Attendance Management</h1>
+        <p>Administrators can review and correct student attendance records.</p>
+    </div>
+    <div class="card filters">
+        <input id="admin-student-date" type="date">
+        <select id="admin-student-status">
+            <option value="">All statuses</option>
+            <option>Present</option>
+            <option>Absent</option>
+            <option>Late</option>
+        </select>
+        <button id="load-admin-student-attendance" class="btn primary">Load Records</button>
+        <button id="print-admin-student-attendance" class="btn outline no-print">Print Attendance List</button>
+    </div>
+    <div class="card table-card" id="admin-student-attendance-printarea">
+        <h3 class="print-only">Student Attendance List</h3>
+        <div class="table-scroll">
+            <table><thead><tr><th>Date</th><th>Student</th><th>Course</th><th>Status</th><th class="no-print">Action</th></tr></thead><tbody id="admin-student-attendance-body">
+
+            </tbody>
+        </table>
+    </div>
+</div>
+</section>
+<section id="view-admin-lecturer-attendance" class="view hidden">
+    <div class="page-title">
+        <h1>Lecturer Attendance Management</h1>
+        <p>Administrators can record and update lecturer attendance.</p>
+    </div>
+    <div class="card">
+        <div class="controls">
+            <select id="admin-lecturer-select"></select>
+            <input id="admin-lecturer-date" type="date">
+            <select id="admin-lecturer-status">
+                <option>Present</option>
+                <option>Absent</option>
+                <option>Late</option>
+            </select>
+            <button id="save-admin-lecturer-attendance" class="btn primary">Save Attendance</button>
+        </div>
+    </div>
+    <div class="card filters">
+        <input id="filter-lecturer-date" type="date">
+        <button id="load-admin-lecturer-attendance" class="btn primary">Load Records</button>
+        <button id="print-admin-lecturer-attendance" class="btn outline no-print">Print Attendance List</button>
+    </div><div class="card table-card" id="admin-lecturer-attendance-printarea">
+        <h3 class="print-only">Lecturer Attendance List</h3>
+        <div class="table-scroll">
+            <table>
+                <thead><tr><th>Date</th><th>Lecturer</th>
+                    <th>Staff No.</th>
+                    <th>Status</th>
+                </tr></thead>
+                <tbody id="admin-lecturer-attendance-body">
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+</main></div></section><script src="app.js"></script></body></html>
