@@ -10,7 +10,11 @@ const Lecture = sequelize.define('Lecture', {
   courseId: { type: DataTypes.INTEGER, allowNull: false },
   dayOfWeek: { type: DataTypes.ENUM(...DAYS_OF_WEEK), allowNull: false },
   startTime: { type: DataTypes.TIME, allowNull: false },
-  endTime: { type: DataTypes.TIME, allowNull: false }
+  endTime: { type: DataTypes.TIME, allowNull: false },
+  // The current lecturer-issued attendance PIN. It is rotated by the server every
+  // 15 seconds while the lecture is active, so clients cannot choose or reuse it.
+  attendancePin: { type: DataTypes.STRING(4), allowNull: true },
+  attendancePinExpiresAt: { type: DataTypes.DATE, allowNull: true }
 }, {
   tableName: 'lectures',
   indexes: [{ fields: ['courseId', 'dayOfWeek'] }]
