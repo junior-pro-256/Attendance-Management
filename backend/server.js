@@ -77,7 +77,7 @@ async function ensureAdmin(){
 }
 async function startServer(){
   await testConnection();
-  await sequelize.sync({alter:true});
+  await sequelize.sync();
   await removeLegacyDailyUniqueIndex();
   await ensureAdmin();
   console.log('Database synced with Student, Lecturer and Admin modules.');
