@@ -21,7 +21,7 @@ const Attendance = sequelize.define('Attendance', {
     { fields: ['date'] },
     // Lectures repeat weekly, so a student can register attendance for the same lecture
     // slot again in a later week — uniqueness is per calendar date, not for all time.
-    { unique: true, fields: ['studentId', 'lectureId', 'date'], name: 'unique_student_lecture_per_date' }
+    { unique: false, fields: ['studentId', 'lectureId', 'date'], name: 'unique_student_lecture_per_date' }
   ]
 });
 
