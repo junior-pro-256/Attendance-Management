@@ -28,7 +28,7 @@ const Course = sequelize.define('Course', {
   },
   isActive: { type: DataTypes.BOOLEAN, defaultValue: true }
 }, { tableName: 'courses', indexes: [
-  { unique: true, fields: ['code'] }, { fields: ['lecturerId'] }, { fields: ['programId'] }
+  { unique: false, fields: ['code'] }, { fields: ['lecturerId'] }, { fields: ['programId'] }
 ] });
 
 module.exports = Course;
